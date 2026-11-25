@@ -18,7 +18,12 @@
         <x-farmpro.field name="code" label="Kode batch" required hint="Unik dan tidak dapat dipakai ulang, mis. BR-004." />
         <x-farmpro.field name="commodity_id" type="select" label="Komoditas" :options="$commodities" required />
         <x-farmpro.field name="coop_id" type="select" label="Kandang" :options="$coops" required />
-        <x-farmpro.field name="supplier_id" type="select" label="Pemasok bibit (opsional)" :options="$suppliers" />
+        <div>
+            <x-farmpro.field name="supplier_id" type="select" label="Pemasok bibit (opsional)" :options="$suppliers" />
+            @if(auth()->user()->role === 'admin')
+                <a href="{{ route('partners.index', ['type' => 'supplier']) }}" class="mt-1 inline-block text-xs font-medium text-brand-700 hover:underline">Kelola pemasok & pembeli →</a>
+            @endif
+        </div>
         <x-farmpro.field name="start_date" type="date" label="Tanggal masuk" :value="now()->toDateString()" required />
         <x-farmpro.field name="seed_type" type="select" label="Jenis bibit" :options="['doc' => 'DOC (anak ayam umur sehari)', 'pullet' => 'Pullet']" value="doc" required />
         <x-farmpro.field name="initial_population" type="number" label="Populasi awal (ekor)" required />

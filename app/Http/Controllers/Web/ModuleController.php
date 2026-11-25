@@ -403,4 +403,86 @@ class ModuleController extends Controller implements HasMiddleware
         AuditLog::record('create_user', $user, null, ['role' => $d['role']]);
         return back()->with('success', 'Pengguna berhasil ditambahkan.');
     }
+
+    public function inventoryItemStore(Request $r)
+    {
+        $d = $r->validate([
+            'code' => 'required|string|max:30|unique:inventory_items,code',
+            'name' => 'required|string|max:255',
+            'category' => 'required|in:feed,vaccine,medicine,vitamin,sanitation,equipment,other',
+            'base_unit' => 'required|string|max:15',
+            'purchase_unit' => 'nullable|string|max:15',
+            'unit_conversion' => 'required|numeric|gt:0',
+            'min_stock' => 'required|numeric|min:0',
+            'stock' => 'nullable|numeric|min:0',
+            'avg_cost' => 'nullable|numeric|min:0',
+            'storage_location' => 'nullable|string|max:255',
+        ]);
+
+        $item = InventoryItem::create([
+            'code' => strtoupper($d['code']),
+            'name' => $d['name'],
+            'category' => $d['category'],
+            'base_unit' => $d['base_unit'],
+            'purchase_unit' => $d['purchase_unit'] ?: null,
+            'unit_conversion' => $d['unit_conversion'],
+            'min_stock' => $d['min_stock'],
+            'stock' => $d['stock'] ?? 0,
+            'avg_cost' => $d['avg_cost'] ?? 0,
+            'storage_location' => $d['storage_location'] ?: null,
+            'is_active' => true,
+        ]);
+
+        if ((float) $item->stock > 0) {
+            InventoryMovement::create([
+                'inventory_item_id' => $item->id,
+                'direction' => 'in',
+                'reason' => 'adjustment',
+                'quantity' => $item->stock,
+                'unit_cost' => $item->avg_cost,
+                'movement_date' => now()->toDateString(),
+                'lot_number' => null,
+                'expiry_date' => null,
+            ]);
+        }
+
+        AuditLog::record('create_inventory_item', $item);
+
+        return back()->with('success', 'Barang inventaris berhasil ditambahkan.');
+    }
+
+    public function inventoryItemUpdate(Request $r, InventoryItem $item)
+    {
+        $d = $r->validate([
+            'code' => ['required', 'string', 'max:30', \Illuminate\Validation\Rule::unique('inventory_items', 'code')->ignore($item->id)],
+            'name' => 'required|string|max:255',
+            'category' => 'required|in:feed,vaccine,medicine,vitamin,sanitation,equipment,other',
+            'base_unit' => 'required|string|max:15',
+            'purchase_unit' => 'nullable|string|max:15',
+            'unit_conversion' => 'required|numeric|gt:0',
+            'min_stock' => 'required|numeric|min:0',
+            'storage_location' => 'nullable|string|max:255',
+        ]);
+
+        $old = $item->only(['code', 'name', 'category', 'base_unit', 'purchase_unit', 'unit_conversion', 'min_stock', 'storage_location']);
+        $d['code'] = strtoupper($d['code']);
+        $item->update($d);
+        AuditLog::record('update_inventory_item', $item, $old, $d);
+
+        return back()->with('success', 'Data barang berhasil diperbarui.');
+    }
+
+    public function inventoryItemDestroy(InventoryItem $item)
+    {
+        if ($item->movements()->exists()) {
+            $item->update(['is_active' => false]);
+            AuditLog::record('deactivate_inventory_item', $item);
+            return back()->with('success', 'Barang dinonaktifkan karena memiliki riwayat mutasi/stok.');
+        }
+
+        $item->delete();
+        AuditLog::record('delete_inventory_item', $item);
+
+        return back()->with('success', 'Barang inventaris berhasil dihapus.');
+    }
 }

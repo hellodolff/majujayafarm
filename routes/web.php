@@ -8,6 +8,7 @@ use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\OperationalController;
 use App\Http\Controllers\Web\ModuleController;
+use App\Http\Controllers\Web\PartnerController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -37,6 +38,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/data-peternakan/kandang/{coop}/ubah', [CoopController::class, 'edit'])->name('coops.edit');
     Route::put('/data-peternakan/kandang/{coop}', [CoopController::class, 'update'])->name('coops.update');
     Route::delete('/data-peternakan/kandang/{coop}', [CoopController::class, 'destroy'])->name('coops.destroy');
+
+    // Partner
+    Route::get('/data-peternakan/mitra', [PartnerController::class, 'index'])->name('partners.index');
+    Route::get('/data-peternakan/mitra/tambah', [PartnerController::class, 'create'])->name('partners.create');
+    Route::post('/data-peternakan/mitra', [PartnerController::class, 'store'])->name('partners.store');
+    Route::get('/data-peternakan/mitra/{partner}/ubah', [PartnerController::class, 'edit'])->name('partners.edit');
+    Route::put('/data-peternakan/mitra/{partner}', [PartnerController::class, 'update'])->name('partners.update');
+    Route::delete('/data-peternakan/mitra/{partner}', [PartnerController::class, 'destroy'])->name('partners.destroy');
+
+    Route::get('/data-peternakan/pemasok-pembeli', [PartnerController::class, 'index'])->name('partners.index');
+    Route::post('/data-peternakan/pemasok-pembeli', [PartnerController::class, 'store'])->name('partners.store');
+    Route::put('/data-peternakan/pemasok-pembeli/{partner}', [PartnerController::class, 'update'])->name('partners.update');
+    Route::delete('/data-peternakan/pemasok-pembeli/{partner}', [PartnerController::class, 'destroy'])->name('partners.destroy');
 
     // Batch ternak
     Route::get('/data-peternakan/batch-ternak', [BatchController::class, 'index'])->name('batches.index');
@@ -78,8 +92,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/kesehatan/jadwal-vaksinasi', [OperationalController::class, 'healthStore'])->name('health.store');
     Route::post('/kesehatan/riwayat', [ModuleController::class, 'healthRecordStore'])->name('health.record.store');
 
-    Route::get('/inventaris/{category}', [ModuleController::class, 'inventoryCategory'])->name('inventory.category');
+    Route::post('/inventaris/barang', [ModuleController::class, 'inventoryItemStore'])->name('inventory.item.store');
+    Route::put('/inventaris/barang/{item}', [ModuleController::class, 'inventoryItemUpdate'])->name('inventory.item.update');
+    Route::delete('/inventaris/barang/{item}', [ModuleController::class, 'inventoryItemDestroy'])->name('inventory.item.destroy');
     Route::post('/inventaris/mutasi', [ModuleController::class, 'inventoryMovementStore'])->name('inventory.movement.store');
+    Route::get('/inventaris/{category}', [ModuleController::class, 'inventoryCategory'])->name('inventory.category');
 
     Route::get('/keuangan/ringkasan', [ModuleController::class, 'financeIndex'])->name('finance.index');
     Route::get('/keuangan/pemasukan', [ModuleController::class, 'financeIncome'])->name('finance.income');

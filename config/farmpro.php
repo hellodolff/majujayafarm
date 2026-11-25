@@ -12,7 +12,7 @@ return [
 
     'menu' => [
         ['label' => 'Dashboard', 'icon' => 'house', 'route' => 'dashboard'],
-        ['label' => 'Data Peternakan', 'icon' => 'warehouse', 'children' => ['Komoditas', 'Kandang', 'Batch Ternak', 'Riwayat Pemeliharaan']],
+        ['label' => 'Data Peternakan', 'icon' => 'warehouse', 'children' => ['Komoditas', 'Kandang', 'Pemasok & Pembeli', 'Batch Ternak', 'Riwayat Pemeliharaan']],
         ['label' => 'Operasional Ternak', 'icon' => 'clipboard-list', 'children' => ['Input Harian', 'Konsumsi Pakan', 'Penimbangan Bobot', 'Kematian & Afkir', 'Produksi Telur', 'Panen & Penjualan']],
         ['label' => 'Kesehatan Ternak', 'icon' => 'heart-pulse', 'children' => ['Jadwal Vaksinasi', 'Pemberian Obat', 'Pemberian Vitamin', 'Riwayat Kesehatan', 'Monitoring Penyakit']],
         ['label' => 'Inventaris', 'icon' => 'package', 'children' => ['Stok Pakan', 'Stok Obat & Vaksin', 'Stok Vitamin', 'Barang Masuk', 'Barang Keluar', 'Riwayat Stok']],
