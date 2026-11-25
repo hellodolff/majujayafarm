@@ -1,0 +1,6 @@
+postgresql://postgres:[YOUR-DATABASE-PASSWORD]@db.kjgholklbhgxmcixyetv.supabase.co:5432/postgres
+
+host=db.kjgholklbhgxmcixyetv.supabase.co
+port=5432
+database=postgres
+user=postgres

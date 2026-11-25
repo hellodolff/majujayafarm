@@ -75,7 +75,8 @@
 <div class="border-t border-slate-800 px-4 py-4 bg-slate-950/50">
     <div class="flex items-center gap-2 text-[11px] text-emerald-400 font-semibold mb-1">
         <i data-lucide="info" class="h-3.5 w-3.5"></i>
-        Standar: 1 Rak = 30 Butir
+        Standar: 1 Peti = 180 Butir (10kg), 1 Tray = 30 Butir (1.5kg). 
+
     </div>
     <p class="text-[10px] text-slate-500">{{ config('farmpro.version') }} &bull; {{ date('Y') }}</p>
 </div>
