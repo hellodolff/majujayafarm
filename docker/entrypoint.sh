@@ -20,10 +20,11 @@ if [ -z "${APP_KEY}" ]; then
     php artisan key:generate --force
 fi
 
-# Rebuild caches with runtime environment variables
+# Clear stale caches and rebuild safe caches (skip route:cache due to closure/duplicate-name routes)
 php artisan config:clear
+php artisan route:clear
+php artisan view:clear
 php artisan config:cache
-php artisan route:cache
 php artisan view:cache
 
 # Ensure www-data owns all cache and storage files created during startup
